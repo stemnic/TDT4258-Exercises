@@ -12,17 +12,17 @@ SECTIONS
   {
     *(.vectors)
     *(.text)
-  } >rom
+  } > rom
 
   .data : ALIGN (8)
   {
     *(.data)
-  } >ram
+  } > ram
 
   .bss : ALIGN (8)
   {
     *(.bss)
-  } >ram
+  } > ram
 
   stack_top = ORIGIN(ram) + LENGTH(ram);
 }
