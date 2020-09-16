@@ -45,10 +45,10 @@ $(BUILDDIR)/%.o : %.s
 	@echo " >" $<
 	@${AS} ${ASFLAGS} $< -o $@
 
-.PHONY : upload
-upload :
+.PHONY: upload
+upload: all
 	-eACommander.sh -r --address 0x00000000 -f "$(BUILDDIR)/$(TARGET).bin" -r
 
-.PHONY : clean
-clean :
+.PHONY: clean
+clean:
 	@rm -r -f $(BUILDDIR)
