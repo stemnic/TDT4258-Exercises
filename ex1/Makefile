@@ -37,8 +37,7 @@ $(BUILDDIR)/%.bin : $(BUILDDIR)/%.elf
 	@${OBJCOPY} -j .text -O binary $< $@
 
 $(BUILDDIR)/%.elf: $(BUILDOBJ)
-	@echo
-	@${LD} -T ${LINKERSCRIPT} -Wl,--print-memory-usage $^ -o $@ ${LDFLAGS} 
+	@${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
 $(BUILDDIR)/%.o : %.s
 	@mkdir -p $(dir $@)
