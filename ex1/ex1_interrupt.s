@@ -198,9 +198,10 @@ _btn_mode_loop:
 	/* Enable rising and falling edge detection */
 	ldr r4, =0xff
 
-	/* Store 8 ones in both the falling edge register, the interrupt clear and
+	/* Store 8 ones in both the falling andr rising edge register, the interrupt clear and
 	 * the interrupt enable register */
 	str r4, [r5, #GPIO_EXTIFALL]
+	str r4, [r5, #GPIO_EXTIRISE]
 	str r4, [r5, #GPIO_IFC]
 	str r4, [r5, #GPIO_IEN]
 	
@@ -390,17 +391,19 @@ gpio_handler:
 	 * interrupt clear register in order to clear the flag */
 	str r1, [r0, #GPIO_IFC]
 
-	/* Moves the number interrupt status 8 places to the left */
-	lsl r1, r1, #8
+	/* Reads the gpio button and turns the respective button on */
+	ldr r1, =GPIO_PC_BASE
+	ldr r2, [r1, #GPIO_DIN] /* Read the DIN values [0:7] */
+	lsl r2, r2, #8 /* Button data in port -> moved to [8:15] */
 
 	/* Loads the base address of the GPIO_PA_BASE into r2 */
-	ldr r2, =GPIO_PA_BASE
+	ldr r1, =GPIO_PA_BASE
 
 	/* Inverts the second operand and stored the result in r1 */
-	mvn r1, r1
+	//mvn r1, r1
 
 	/* Stores the inverted value in the DOUT register */
-	str r1, [r2, #GPIO_DOUT]
+	str r2, [r1, #GPIO_DOUT]
 
 	/* Branch to the LR which was stacked in the stack frame by the processor
 	 * upon entering the interrupt routine */
