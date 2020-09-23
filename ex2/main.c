@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "nvic.h"
 
 /*
  * TODO calculate the appropriate sample period for the sound wave(s) you 
@@ -17,26 +18,20 @@
 /*
  * Declaration of peripheral setup functions 
  */
-void setupTimer(uint32_t period);
-void setupDAC();
-void setupNVIC();
+void setup_timer(uint32_t period);
+void setup_dac();
+void setup_nvic();
 
 /*
  * Your code will start executing here 
  */
 int main(void)
 {
-	/*
-	 * Call the peripheral setup functions 
-	 */
-	setupGPIO();
-	setupDAC();
-	setupTimer(SAMPLE_PERIOD);
+	setup_gpio();
+	setup_dac();
+	setup_timer(SAMPLE_PERIOD);
 
-	/*
-	 * Enable interrupt handling 
-	 */
-	setupNVIC();
+	setup_nvic();
 
 	/*
 	 * TODO for higher energy efficiency, sleep while waiting for
@@ -47,16 +42,20 @@ int main(void)
 	return 0;
 }
 
-void setupNVIC()
+#define IRQ_TIMER1 54
+#define IRQ_GPIO_EVEN 5
+#define IRQ_GPIO_ODD 4
+
+void setup_nvic()
 {
-	/*
-	 * TODO use the NVIC ISERx registers to enable handling of
-	 * interrupt(s) remember two things are necessary for interrupt
-	 * handling: - the peripheral must generate an interrupt signal - the
-	 * NVIC must be configured to make the CPU handle the signal You will
-	 * need TIMER1, GPIO odd and GPIO even interrupt handling for this
-	 * assignment. 
-	 */
+	nvic_enable(IRQ_TIMER1);
+	nvic_set_priority(IRQ_TIMER1, NVIC_PRI_2);
+
+	nvic_enable(IRQ_GPIO_EVEN);
+	nvic_set_priority(IRQ_GPIO_EVEN, NVIC_PRI_2);
+
+	nvic_enable(IRQ_GPIO_ODD);
+	nvic_set_priority(IRQ_GPIO_ODD, NVIC_PRI_2);
 }
 
 /*

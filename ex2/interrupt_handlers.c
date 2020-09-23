@@ -6,8 +6,12 @@
 /*
  * TIMER1 interrupt handler 
  */
+volatile int t = 0
 void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 {
+	t += 1;
+	int i = sawtooth(t);
+	dac_writ(saw);
 	/*
 	 * TODO feed new samples to the DAC remember to clear the pending
 	 * interrupt by writing 1 to TIMER1_IFC 
