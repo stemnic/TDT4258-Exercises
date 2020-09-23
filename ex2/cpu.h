@@ -23,6 +23,7 @@ static inline void dmb(void)
                  : "memory");
 }
 
+                 : "memory");
 /*
  * Instructions synchronization barrier
  */
