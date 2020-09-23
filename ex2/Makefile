@@ -20,10 +20,6 @@ ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
 %.o : %.c
 	${CC} ${CFLAGS} -c $< -o $@
 
-.PHONY : pretty
-pretty :
-	-indent *.c *.h
-
 .PHONY : upload
 upload :
 	-eACommander.sh -r --address 0x00000000 -f "ex2.bin" -r
