@@ -22,9 +22,6 @@ ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
 %.o : %.c
 	${CC} ${CFLAGS} -c $< -o $@
 
-.PHONY : pretty
-pretty :
-	-indent *.c *.h
 
 .PHONY : upload
 upload :

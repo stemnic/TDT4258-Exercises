@@ -26,10 +26,6 @@ unsigned char get_button_val(unsigned char button);
 void gpio_set_led(unsigned char led, unsigned char val);
 
 
-// BSP_PeripheralAccess ( BSP_AUDIO_OUT, true )
-
-*(volatile uint32_t *)0x80000000 = 0;
-
 /*
  * Your code will start executing here 
  */
@@ -42,6 +38,8 @@ int main(void)
 	setupNVIC();
 
 	asm volatile ("cpsie i");
+
+	while (1);
 
 	int s = 0;
 	while (1) {

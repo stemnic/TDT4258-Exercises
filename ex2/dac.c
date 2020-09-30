@@ -19,7 +19,4 @@ void setupDAC()
 	*DAC0_CTRL = 0x50010;
 	*DAC0_CH0CTRL = 1;
 	*DAC0_CH1CTRL = 1;
-	
-	*DAC0_CH0DATA = 1000;
-	*DAC0_CH1DATA = 1000;
 }
