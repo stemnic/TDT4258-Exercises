@@ -208,3 +208,4 @@ SECTIONS
   .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) }
   /DISCARD/ : { *(.note.GNU-stack) }
 }
+

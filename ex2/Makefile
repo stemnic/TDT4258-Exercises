@@ -1,45 +1,33 @@
 # Example Makefile
-
-TOP = $(shell pwd)
-BUILDDIR = $(TOP)/build
-TARGET_NAME = ex2
+#
+# Exercise 2, TDT4258
 
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 
-CPFLAGS += -I$(TOP)/include
-CFLAGS=-mcpu=cortex-m3 -mthumb -g -std=gnu99 -Wall
+CFLAGS=-mcpu=cortex-m3 -mthumb -g -std=c99 -Wall
 LDFLAGS=-mcpu=cortex-m3 -mthumb -g -lgcc -lc -lcs3 -lcs3unhosted -lefm32gg -Llib
 ASFLAGS=-mcpu=cortex-m3 -mthumb -g
 LINKERSCRIPT=lib/efm32gg.ld
 
-# Add object files here
-obj-y :=
-obj-y += /src/gpio.o
-obj-y += /src/dac.o
-obj-y += /src/timer.o
-obj-y += /src/main.o
+ex2.bin : ex2.elf
+	${OBJCOPY} -O binary $< $@
 
-OBJ = $(addprefix $(BUILDDIR), $(obj-y))
+ex2.elf : ex2.o timer.o dac.o gpio.o interrupt_handlers.o
+	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
-.SECONDARY: $(OBJ)
-.PHONY : clean upload
-all: $(BUILDDIR)/$(TARGET_NAME).elf $(BUILDDIR)/$(TARGET_NAME).bin
+%.o : %.c
+	${CC} ${CFLAGS} -c $< -o $@
 
-$(BUILDDIR)/%.bin : $(BUILDDIR)/%.elf
-	@$(OBJCOPY) -O binary $< $@
+.PHONY : pretty
+pretty :
+	-indent *.c *.h
 
-$(BUILDDIR)/%.elf : $(OBJ)
-	@$(LD) -T $(LINKERSCRIPT) $^ -o $@ $(LDFLAGS)
+.PHONY : upload
+upload :
+	-eACommander.sh -r --address 0x00000000 -f "ex2.bin" -r
 
-$(BUILDDIR)/%.o : %.c
-	@mkdir -p $(dir $@)
-	@echo " >" $(notdir $<)
-	@$(CC) $(CFLAGS) $(CPFLAGS) -c $< -o $@
-
-upload: all
-	-eACommander.sh -r --address 0x00000000 -f $(BUILDDIR)/$(TARGET_NAME).bin -r
-
-clean:
-	@rm -r -f $(BUILDDIR)
+.PHONY : clean
+clean :
+	-rm -rf *.o *.elf *.bin *.hex 

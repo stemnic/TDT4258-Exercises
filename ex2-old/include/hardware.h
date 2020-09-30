@@ -1,3 +1,6 @@
+#ifndef HARDWARE_H
+#define HARDWARE_H
+
 #include <types.h>
 
 #define _r volatile const
@@ -53,3 +56,4 @@ typedef struct
 } nvic_reg;
 
 #define NVIC ((nvic_reg *)0xE000E100)
+#endif
