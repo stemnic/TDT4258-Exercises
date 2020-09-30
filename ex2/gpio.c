@@ -25,7 +25,7 @@ void setupGPIO()
 
 	/* Input mode pull-mode on all pins */
 	*GPIO_PC_MODEL = 0;
-	for (u32 i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		*GPIO_PC_MODEL |= (2 << (i * 4));
 	}
@@ -34,7 +34,7 @@ void setupGPIO()
 	*GPIO_PC_DOUT = 0xFF;
 }
 
-void gpio_set_led(u8 led, u8 val)
+void gpio_set_led(unsigned char led, unsigned char val)
 {
 	if (val)
 	{
@@ -46,7 +46,7 @@ void gpio_set_led(u8 led, u8 val)
 	}
 }
 
-u8 get_button_val(u8 button)
+unsigned char get_button_val(unsigned char button)
 {
 	return (*GPIO_PC_DIN & (1 << button)) ? 1 : 0;
 }

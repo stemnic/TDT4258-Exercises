@@ -3,6 +3,8 @@
 
 #include "efm32gg.h"
 
+extern volatile uint32_t tick;
+
 /*
  * TODO calculate the appropriate sample period for the sound wave(s) you 
  * want to generate. The core clock (which the timer clock is derived
@@ -18,9 +20,15 @@
 void setupTimer(uint32_t period);
 void setupDAC();
 void setupNVIC();
-/*  */
-u8 get_button_val(u8 button);
-void gpio_set_led(u8 led, u8 val);
+
+/* Apparently we dont use header files */
+unsigned char get_button_val(unsigned char button);
+void gpio_set_led(unsigned char led, unsigned char val);
+
+
+// BSP_PeripheralAccess ( BSP_AUDIO_OUT, true )
+
+*(volatile uint32_t *)0x80000000 = 0;
 
 /*
  * Your code will start executing here 
@@ -33,11 +41,22 @@ int main(void)
 
 	setupNVIC();
 
+	asm volatile ("cpsie i");
+
+	int s = 0;
+	while (1) {
+		if (tick >= 8) {
+			tick = 0;
+			s ^= 1;
+			gpio_set_led(1, s);
+		}
+	}
+
 	/*
 	 * TODO for higher energy efficiency, sleep while waiting for
 	 * interrupts instead of infinite loop for busy-waiting 
 	 */
-	while (1) ;
+	while (1);
 
 	return 0;
 }
@@ -52,6 +71,7 @@ void setupNVIC()
 	 * need TIMER1, GPIO odd and GPIO even interrupt handling for this
 	 * assignment. 
 	 */
+	*ISER0 = (1 << 12);  /* Timer 1 interrupt */
 }
 
 /*

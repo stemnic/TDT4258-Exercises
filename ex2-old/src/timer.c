@@ -6,7 +6,7 @@
 
 #include <hardware.h>
 
-#define IRQ_TIMER1 5
+#define IRQ_TIMER1 12
 
 void setup_timer(uint16_t period)
 {

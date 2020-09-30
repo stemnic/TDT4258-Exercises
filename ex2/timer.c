@@ -9,14 +9,12 @@
 void setupTimer(uint16_t period)
 {
 	// Enable and start timer 1 with interrupt:
-	*(CMU_HFCORECLKEN0) |= CMU2_HFPERCLKEN0_TIMER1; //Enable timer 1
-	*(TIMER1_IEN) |= (1 << 4);						//Enable timer 1 interrupt
-	*(TIMER1_CTRL) |= (10 << 24);					// 1024 times prescaler
+	*CMU_HFPERCLKEN0 |= CMU2_HFPERCLKEN0_TIMER1; // Enable timer 1
+	*TIMER1_IEN |= (1 << 0);				     // Enable timer 1 interrupt
+	*TIMER1_TOP = 1000;	                         // 4 MHz clock -> 1024 prescaler -> count to 4000 -> interrupt every second-ish
+	*TIMER1_CTRL = (8 << 24);					 // 1024 times prescaler with prescaled clock as clock source
+	*TIMER1_CMD = 1;                       		 // Start timer 1 (write 1 to bit 1 to stop)
 
-	*(TIMER1_CMD) = (1 << 0); //Start timer 1 (write 1 to bit 1 to stop)
-	*(TIMER1_TOP) = 4000;	  // 4 MHz clock -> 1024 prescaler -> count to 4000 -> interrupt every second-ish
-	nvic_enable(IRQ_TIMER1);
-	nvic_set_priority(IRQ_TIMER1, NVIC_PRI_2);
 	/*
 	 * TODO enable and set up the timer
 	 * 
