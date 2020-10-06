@@ -40,13 +40,13 @@ void led_set(unsigned char led, unsigned char state)
 {
 	/* LEDs are active low */
 	if (state) {
-		*GPIO_PA_DOUTCLR = (1 << led);
+		*GPIO_PA_DOUTCLR = (1 << (led + 8));
 	} else {
-		*GPIO_PA_DOUTSET = (1 << led);
+		*GPIO_PA_DOUTSET = (1 << (led + 8));
 	}
 }
 
 unsigned char get_button(unsigned char btn)
 {
-	return (*GPIO_PC_DIN & (1 << (btn + 8))) ? 1 : 0;
+	return (*GPIO_PC_DIN & (1 << (btn - 1))) ? 1 : 0;
 }

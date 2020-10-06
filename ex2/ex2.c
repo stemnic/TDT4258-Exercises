@@ -6,6 +6,15 @@ void setupTimer(void);
 void setupDAC(void);
 void setupNVIC(void);
 void setupGPIO(void);
+extern void led_set(unsigned char led, unsigned char state);
+
+enum sound_name {
+	SOUND_1,
+	SOUND_2,
+	SOUND_3
+};
+
+extern void start_sound(enum sound_name s);
 
 int main(void)
 {
@@ -13,6 +22,9 @@ int main(void)
 	setupDAC();
 	setupTimer();
 	setupNVIC();
+
+	
+	start_sound(SOUND_3); 
 
 	while (1);
 	return 0;

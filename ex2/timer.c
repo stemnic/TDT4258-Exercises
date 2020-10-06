@@ -14,7 +14,6 @@ void setupTimer(void)
 	 * 4. Start the timer by writing 1 to TIMER1_CMD
 	 */
 	 *CMU_HFPERCLKEN0 |= (1 << 6);
-	 *TIMER1_TOP = PERIOD;
 	 *TIMER1_IEN = 1;
 
 	 /*
@@ -29,13 +28,14 @@ void setupTimer(void)
 	  * ticks = period_us / period_timer_us
 	  * ticks = 22.7 us / 0.57 us = 40 ticks
 	  * 
-	  * With a prescaler of 8 the period should be 40 in order to produce a 
-	  * tick rate of 44 kHz.
+	  * With a prescaler of 8 the period should be 80 in order to produce a 
+	  * tick rate of 22 kHz.
 	  */
+	 *TIMER1_TOP = 360;
 	 
 	 /* Set the prescaler to 8 */
 	 *TIMER1_CTRL &= ~(0xF << 24);
-	 *TIMER1_CTRL |= (3 << 24);
+	 *TIMER1_CTRL &= ~(0b00 << 0); // |= (3 << 24);
 }
 
 void start_timer(void)
@@ -46,4 +46,8 @@ void start_timer(void)
 void stop_timer(void)
 {
 	*TIMER1_CMD = 0;
+}
+
+void set_top(uint32_t top){
+	*TIMER1_TOP = top;
 }
