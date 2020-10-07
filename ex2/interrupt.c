@@ -28,13 +28,16 @@ void nvic_config()
  */
 void __attribute__((interrupt)) TIMER1_IRQHandler()
 {
+	wake_up();
 	*TIMER1_IFC = 0xFFFF;
 
 	if (curr_sample && (curr_sample < last_sample)) {
+		//play current sample and increment
 		const unsigned short sample = *curr_sample++;
 		dac_write(sample, sample);
 	}
 	else {
+		//sound is complete, return to deep sleep
 		sound_stop();
 		timer_stop();
 		sleep_deep();
@@ -55,15 +58,16 @@ static inline void gpio_handler(void)
 	if (!get_button(1)) {
 		/* Button 0 pressed */
 		sound_start(SOUND_1);
-		
+		led_set(1, 1);
+
 	} else if (!get_button(2)) {
 		/* Button 1 pressed */
 		sound_start(SOUND_2);
+		led_set(2, 1);
 	} else if (!get_button(3)) {
 		/* Button 2 pressed */
 		sound_start(SOUND_3);
 	} 
-	led_set(1, 0);
 }
 
 void __attribute__((interrupt)) GPIO_EVEN_IRQHandler()

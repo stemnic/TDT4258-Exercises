@@ -9,7 +9,6 @@ void sleep_deep() {
 	dac_stop();
 	timer_stop();
 	*SCR = 0b10110;
-	__asm ("wfi" : :);
 }
 
 void wake_up() {
