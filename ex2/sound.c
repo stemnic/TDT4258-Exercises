@@ -16,10 +16,6 @@ void sound_stop(void)
 	last_sample = NULL;
 
 	timer_stop();
-
-	/* Enter LP mode */
-	//*SCR = 0b10110;
-	//asm volatile ("wfi");
 }
 
 /*

@@ -44,6 +44,11 @@
 #define GPIO_IF        ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
 
+// MSC
+#define MSC_BASE 0x400C0000
+
+#define MSC_READCTRL   ((volatile uint32_t*)(MSC_BASE + 0x114))
+
 // CMU
 
 #define CMU_BASE2 0x400c8000
@@ -95,9 +100,10 @@
 
 // EMU
 
-#define EMU_BASE2 0x400c6000
+#define EMU_BASE 0x400c6000
 
-#define EMU_CTRL ((volatile uint32_t*)(EMU_BASE2 + 0x000))
+#define EMU_CTRL    ((volatile uint32_t*)(EMU_BASE + 0x000))
+#define EMU_MEMCTRL ((volatile uint32_t*)(EMU_BASE + 0x004))
 
 // DAC0
 

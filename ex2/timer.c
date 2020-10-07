@@ -1,8 +1,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "timer.h"
+#include "dac.h"
 
 #include "efm32gg.h"
+
+void sleep_deep() {
+	dac_stop();
+	timer_stop();
+	*SCR = 0b10110;
+	__asm ("wfi" : :);
+}
+
+void wake_up() {
+	*SCR &= ~0b10110;
+    dac_start();
+	timer_start();
+}
 
 void timer_config(void)
 {
@@ -39,12 +53,14 @@ void timer_config(void)
 
 void timer_start(void)
 {
+    *CMU_HFPERCLKEN0 |= (1 << 6);
 	*TIMER1_CMD = 1;
 }
 
 void timer_stop(void)
 {
-	*TIMER1_CMD = 0;
+    *TIMER1_CMD = (1 << 1);
+    *CMU_HFPERCLKEN0 &= ~(1 << 6);	
 }
 
 void timer_set_top(uint32_t top)

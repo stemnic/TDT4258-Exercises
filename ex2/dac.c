@@ -25,3 +25,18 @@ void dac_write(unsigned short l, unsigned short r)
 	*DAC0_CH0DATA = (l & 0xFFF);
 	*DAC0_CH1DATA = (r & 0xFFF);
 }
+
+void dac_start(void)
+{
+	*CMU_HFPERCLKEN0 |= (1 << 17);
+	*DAC0_CTRL = 0x50010;
+	*DAC0_CH0CTRL = 1;
+	*DAC0_CH1CTRL = 1;
+}
+
+void dac_stop(void)
+{
+	*DAC0_CH0CTRL = 0;
+	*DAC0_CH1CTRL = 0;
+	*CMU_HFPERCLKEN0 &= ~(1 << 17);
+}

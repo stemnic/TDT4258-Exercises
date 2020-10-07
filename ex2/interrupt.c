@@ -30,15 +30,14 @@ void __attribute__((interrupt)) TIMER1_IRQHandler()
 {
 	*TIMER1_IFC = 0xFFFF;
 
-	if (!state)
-		return;
-
 	if (curr_sample && (curr_sample < last_sample)) {
 		const unsigned short sample = *curr_sample++;
 		dac_write(sample, sample);
 	}
 	else {
 		sound_stop();
+		timer_stop();
+		sleep_deep();
 	}
 }
 
@@ -49,22 +48,22 @@ void __attribute__((interrupt)) TIMER1_IRQHandler()
  */
 static inline void gpio_handler(void)
 {
+	wake_up();
 	/* Clear interrupt flags */
 	*GPIO_IFC = 0xFFFF;
-
+	
 	if (!get_button(1)) {
 		/* Button 0 pressed */
 		sound_start(SOUND_1);
+		
 	} else if (!get_button(2)) {
 		/* Button 1 pressed */
 		sound_start(SOUND_2);
 	} else if (!get_button(3)) {
 		/* Button 2 pressed */
 		sound_start(SOUND_3);
-	} else {
-		/* Button 2 released */
-		//stop_sound();
-	}
+	} 
+	led_set(1, 0);
 }
 
 void __attribute__((interrupt)) GPIO_EVEN_IRQHandler()
