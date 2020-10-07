@@ -2,8 +2,9 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "dac.h"
 
-void setupDAC(void)
+void dac_config(void)
 {
 	/*
 	 * 1. Enable the DAC clock by setting bit 17 in CMU_HFPERCLKEN0

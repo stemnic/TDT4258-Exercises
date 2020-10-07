@@ -3,7 +3,7 @@
 
 #include "efm32gg.h"
 
-void setupGPIO(void)
+void gpio_config(void)
 {
 	/*
 	 * Buttons C[0..7 ]

@@ -1,3 +1,49 @@
+#include <stddef.h>
+#include <stdint.h>
+#include "sound.h"
+#include "timer.h"
+
+/*
+ * Stops the current song from playing
+ */
+void sound_stop(void)
+{
+	/* Stop song */
+	state = 0;
+
+	/* Reset pointers */
+	curr_sample = NULL;
+	last_sample = NULL;
+
+	timer_stop();
+
+	/* Enter LP mode */
+	//*SCR = 0b10110;
+	//asm volatile ("wfi");
+}
+
+/*
+ * Starts a sound and enables the state flag so that the interrupt will start 
+ * playing it
+ */
+void sound_start(enum sound_name s)
+{
+	/* Get the sound pointer */
+    
+	struct sound *sound = &sound_list[s];
+
+	/* Stop playing */
+	state = 0;
+
+	curr_sample = sound->data;
+	last_sample = sound->data + sound->length;
+
+	timer_start();
+
+	/* Start playing */
+	state = 1;
+}
+
 /* Song arrays - should always be declared in C file */
 
 const unsigned short sound_1[2004] = {

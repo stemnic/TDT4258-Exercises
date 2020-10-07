@@ -1,11 +1,10 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include "timer.h"
 
 #include "efm32gg.h"
 
-#define PERIOD 500
-
-void setupTimer(void)
+void timer_config(void)
 {
 	/*
 	 * 1. Enable clock to timer by setting bit 6 in CMU_HFPERCLKEN0
@@ -31,23 +30,24 @@ void setupTimer(void)
 	  * With a prescaler of 8 the period should be 80 in order to produce a 
 	  * tick rate of 22 kHz.
 	  */
-	 *TIMER1_TOP = 360;
+	 timer_set_top(360);
 	 
 	 /* Set the prescaler to 8 */
 	 *TIMER1_CTRL &= ~(0xF << 24);
 	 *TIMER1_CTRL &= ~(0b00 << 0); // |= (3 << 24);
 }
 
-void start_timer(void)
+void timer_start(void)
 {
 	*TIMER1_CMD = 1;
 }
 
-void stop_timer(void)
+void timer_stop(void)
 {
 	*TIMER1_CMD = 0;
 }
 
-void set_top(uint32_t top){
+void timer_set_top(uint32_t top)
+{
 	*TIMER1_TOP = top;
 }
