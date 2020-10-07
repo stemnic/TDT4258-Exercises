@@ -8,6 +8,7 @@
 
 int main(void)
 {
+    *MSC_READCTRL   |= (1<<3);      // disable instruction cache
 	gpio_config();
 	dac_config();
 	timer_config();
@@ -21,8 +22,7 @@ int main(void)
 	sleep_deep();
 	__asm ("wfi" : :);
 
-    //*EMU_MEMCTRL    = 7;            // disable ram blocks 1-3
-    //*MSC_READCTRL   |= (1<<3);      // disable instruction cache
+    
 
 	return 0;
 }

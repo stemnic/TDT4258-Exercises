@@ -34,8 +34,6 @@ static struct sound sound_list[NUM_SOUNDS] = {
 /* Variables used in the interrupt */
 volatile unsigned short *curr_sample;
 volatile unsigned short *last_sample;
-/* State is not playing */
-volatile unsigned char state;
 
 void sound_start(enum sound_name s);
 void sound_stop(void);
