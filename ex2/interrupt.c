@@ -58,12 +58,12 @@ static inline void gpio_handler(void)
 	if (!get_button(1)) {
 		/* Button 0 pressed */
 		sound_start(SOUND_1);
-		led_set(1, 1);
+		//led_set(1, 1);
 
 	} else if (!get_button(2)) {
 		/* Button 1 pressed */
 		sound_start(SOUND_2);
-		led_set(2, 1);
+		//led_set(2, 1);
 	} else if (!get_button(3)) {
 		/* Button 2 pressed */
 		sound_start(SOUND_3);
