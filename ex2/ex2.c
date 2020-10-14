@@ -16,16 +16,10 @@ int main(void)
 	timer_config();
 	#ifdef INTERRUPT
 		nvic_config();
-		//timer_stop();
-		//dac_stop();
-		//timer_stop();
-		//sleep_deep();
 		sound_start(SOUND_3);
 		__asm ("wfi" : :);
 	#else
-		sound_start(SOUND_3);
-		//timer_start();
-		//timer_set_top(0xFFFF);	
+		sound_start(SOUND_3);	
 		while (1) {
 			//this while loop polls buttons and timer1
 			
