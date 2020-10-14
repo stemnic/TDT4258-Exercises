@@ -14,22 +14,21 @@ int main(void)
 	gpio_config();
 	dac_config();
 	timer_config();
-
 	#ifdef INTERRUPT
 		nvic_config();
-		sound_start(SOUND_3);
 		//timer_stop();
 		//dac_stop();
 		//timer_stop();
-		sleep_deep();
+		//sleep_deep();
+		sound_start(SOUND_3);
 		__asm ("wfi" : :);
 	#else
-		timer_start();
-		timer_set_top(0xFFFF);
 		sound_start(SOUND_3);
+		//timer_start();
+		//timer_set_top(0xFFFF);	
 		while (1) {
 			//this while loop polls buttons and timer1
-
+			
 			const uint32_t top = 400;
 			if (*TIMER1_CNT > top) {
 				//reset timer counter
@@ -54,7 +53,6 @@ int main(void)
 			} 
 		}
 	#endif
-    
 
 	return 0;
 }

@@ -3,6 +3,12 @@
 #include "sound.h"
 #include "timer.h"
 
+static const struct sound sound_list[NUM_SOUNDS] = {
+	{.data = sound_1, .length = sizeof(sound_1) / 2},
+	{.data = sound_2, .length = sizeof(sound_2) / 2},
+	{.data = sound_3, .length = sizeof(sound_3) / 2}
+};
+
 /*
  * Stops the current song from playing
  */
@@ -19,10 +25,10 @@ void sound_stop(void)
  * Starts a sound and enables the state flag so that the interrupt will start 
  * playing it
  */
-void sound_start(enum sound_name s)
+void sound_start(const enum sound_name s)
 {
 	/* Get the sound pointer */
-	struct sound *sound = &sound_list[s];
+	const struct sound *sound = &sound_list[s];
 
     /* set pointers accordingly */
 	curr_sample = sound->data;

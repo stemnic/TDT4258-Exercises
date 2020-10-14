@@ -49,6 +49,7 @@ void __attribute__((interrupt)) TIMER1_IRQHandler()
  * Both even and odd interrupt handler calls this function. This is called if 
  * any of the eight buttons is either pressed or released
  */
+#ifdef INTERRUPT
 static inline void gpio_handler(void)
 {
 	wake_up();
@@ -79,3 +80,4 @@ void __attribute__((interrupt)) GPIO_ODD_IRQHandler()
 {
 	gpio_handler();
 }
+#endif

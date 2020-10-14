@@ -19,24 +19,19 @@ enum sound_name {
 /*
  * Decribes a sound 
  */
+
 struct sound {
 	const unsigned short *data;
-	unsigned int length;
+	unsigned int const length;
 };
 
-/* Remember same order as the enum */
-static struct sound sound_list[NUM_SOUNDS] = {
-	{.data = sound_1, .length = sizeof(sound_1) / 2},
-	{.data = sound_2, .length = sizeof(sound_2) / 2},
-	{.data = sound_3, .length = sizeof(sound_3) / 2}
-};
+
 
 /* Variables used in the interrupt */
-volatile unsigned short *curr_sample;
-volatile unsigned short *last_sample;
+volatile const unsigned short *curr_sample;
+volatile const unsigned short *last_sample;
 
 void sound_start(enum sound_name s);
 void sound_stop(void);
-
 
 #endif
