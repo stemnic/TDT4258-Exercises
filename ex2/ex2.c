@@ -1,44 +1,29 @@
-#include <stdint.h>
 #include <stdbool.h>
 #include "efm32gg.h"
-
-void setupTimer(void);
-void setupDAC(void);
-void setupNVIC(void);
-void setupGPIO(void);
-extern void led_set(unsigned char led, unsigned char state);
-
-enum sound_name {
-	SOUND_1,
-	SOUND_2,
-	SOUND_3
-};
-
-extern void start_sound(enum sound_name s);
+#include "gpio.h"
+#include "sound.h"
+#include "timer.h"
+#include "dac.h"
+#include "interrupt.h"
 
 int main(void)
 {
-	setupGPIO();
-	setupDAC();
-	setupTimer();
-	setupNVIC();
+    *MSC_READCTRL   |= (1<<3);      // disable instruction cache
+	gpio_config();
+	dac_config();
+	timer_config();
+	nvic_config();
 
 	
-	start_sound(SOUND_3); 
+	sound_start(SOUND_3); 
+	//timer_stop();
+	//dac_stop();
+	//timer_stop();
+	sleep_deep();
+	__asm ("wfi" : :);
 
-	while (1);
+    
+
 	return 0;
 }
 
-void setupNVIC()
-{
-	/*
-	 * TODO use the NVIC ISERx registers to enable handling of
-	 * interrupt(s) remember two things are necessary for interrupt
-	 * handling: - the peripheral must generate an interrupt signal - the
-	 * NVIC must be configured to make the CPU handle the signal You will
-	 * need TIMER1, GPIO odd and GPIO even interrupt handling for this
-	 * assignment. 
-	 */
-	*ISER0 = (1 << 1) | (1 << 11) | (1 << 12);
-}

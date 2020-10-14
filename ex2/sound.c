@@ -1,3 +1,37 @@
+#include <stddef.h>
+#include <stdint.h>
+#include "sound.h"
+#include "timer.h"
+
+/*
+ * Stops the current song from playing
+ */
+void sound_stop(void)
+{
+	/* Reset pointers */
+	curr_sample = NULL;
+	last_sample = NULL;
+
+	timer_stop();
+}
+
+/*
+ * Starts a sound and enables the state flag so that the interrupt will start 
+ * playing it
+ */
+void sound_start(enum sound_name s)
+{
+	/* Get the sound pointer */
+	struct sound *sound = &sound_list[s];
+
+    /* set pointers accordingly */
+	curr_sample = sound->data;
+	last_sample = sound->data + sound->length;
+
+    /* start the timer so interrupts are called */
+	timer_start();
+}
+
 /* Song arrays - should always be declared in C file */
 
 const unsigned short sound_1[2004] = {
