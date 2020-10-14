@@ -26,7 +26,9 @@ void timer_config(void)
 	 * 4. Start the timer by writing 1 to TIMER1_CMD
 	 */
 	 *CMU_HFPERCLKEN0 |= (1 << 6);
-	 *TIMER1_IEN = 1;
+	 #ifdef INTERRUPT
+	 	*TIMER1_IEN = 1;
+	 #endif
 
 	 /*
 	  * Calculate the prescaler
@@ -43,7 +45,9 @@ void timer_config(void)
 	  * With a prescaler of 8 the period should be 80 in order to produce a 
 	  * tick rate of 22 kHz.
 	  */
-	 timer_set_top(360);
+	 #ifdef INTERRUPT
+	 	timer_set_top(360);
+	 #endif
 	 
 	 /* Set the prescaler to 8 */
 	 *TIMER1_CTRL &= ~(0xF << 24);

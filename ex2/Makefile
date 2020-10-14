@@ -30,7 +30,7 @@ ex2.elf : ex2.o timer.o dac.o gpio.o interrupt.o sound.o
 	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
 %.o : %.c
-	${CC} ${CFLAGS} ${SYMBOLFLAG} -c $< -o $@
+	${CC} ${CFLAGS} ${SYMBOLFLAG} -c $< -o $@ 
 
 .PHONY : upload
 upload : ex2.bin

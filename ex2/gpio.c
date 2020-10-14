@@ -27,14 +27,14 @@ void gpio_config(void)
 	*GPIO_PC_MODEL = 0x22222222;
 
 	#ifdef INTERRUPT
-	/* Button interrupts on falling and rising edge */
-	*GPIO_EXTIFALL = 0xFF;
-	*GPIO_EXTIRISE = 0xFF;
-	*GPIO_EXTIPSELL = 0x22222222;
+		/* Button interrupts on falling and rising edge */
+		*GPIO_EXTIFALL = 0xFF;
+		*GPIO_EXTIRISE = 0xFF;
+		*GPIO_EXTIPSELL = 0x22222222;
 
-	/* Clear interrupt flag and enable interrupts */
-	*GPIO_IFC = 0xFFFF;
-	*GPIO_IEN = 0xFF;
+		/* Clear interrupt flag and enable interrupts */
+		*GPIO_IFC = 0xFFFF;
+		*GPIO_IEN = 0xFF;
 	#endif
 }
 
