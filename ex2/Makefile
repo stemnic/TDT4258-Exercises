@@ -11,6 +11,17 @@ LDFLAGS=-mcpu=cortex-m3 -mthumb -g -lgcc -lc -lcs3 -lcs3unhosted -lefm32gg -Llib
 ASFLAGS=-mcpu=cortex-m3 -mthumb -g
 LINKERSCRIPT=lib/efm32gg.ld
 
+ifndef MODE
+$(error > make MODE=interrupt/polling)
+endif
+
+ifeq ($(MODE), interrupt)
+SYMBOLFLAG=-DINTERRUPT
+endif
+
+ifeq ($(MODE), polling)
+SYMBOLFLAG=-DPOLLING
+endif
 
 ex2.bin : ex2.elf
 	${OBJCOPY} -O binary $< $@
@@ -19,7 +30,7 @@ ex2.elf : ex2.o timer.o dac.o gpio.o interrupt.o sound.o
 	${LD} -T ${LINKERSCRIPT} $^ -o $@ ${LDFLAGS} 
 
 %.o : %.c
-	${CC} ${CFLAGS} -c $< -o $@
+	${CC} ${CFLAGS} ${SYMBOLFLAG} -c $< -o $@
 
 .PHONY : upload
 upload : ex2.bin

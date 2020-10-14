@@ -26,6 +26,7 @@ void gpio_config(void)
 	/* Input pull on all buttons */
 	*GPIO_PC_MODEL = 0x22222222;
 
+	#ifdef INTERRUPT
 	/* Button interrupts on falling and rising edge */
 	*GPIO_EXTIFALL = 0xFF;
 	*GPIO_EXTIRISE = 0xFF;
@@ -34,6 +35,7 @@ void gpio_config(void)
 	/* Clear interrupt flag and enable interrupts */
 	*GPIO_IFC = 0xFFFF;
 	*GPIO_IEN = 0xFF;
+	#endif
 }
 
 void led_set(unsigned char led, unsigned char state)
