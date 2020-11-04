@@ -1,6 +1,10 @@
 .DS_Store
 build
 .vscode
+platform-energymicro-efm32gg-dk3750
+selected_platformconfig
+selected_ptxconfig
+selected_toolchain
 # Prerequisites
 *.d
 
