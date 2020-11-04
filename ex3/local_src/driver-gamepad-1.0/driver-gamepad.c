@@ -11,6 +11,9 @@
 #include <linux/moduleparam.h>
 #include <linux/kdev_t.h>
 #include <linux/ioport.h>
+#include <linux/cdev.h>
+#include <linux/device.h>
+#include <linux/kdev_t.h>
 #include <asm/io.h>
 #include <asm/uaccess.h>
 #include <asm/signal.h>
@@ -23,10 +26,12 @@
 #define GPIO_ODD_IRQ_LINE 18
 #define DRIVER_NAME "gamepad"
 #define DEV_NR_COUNT 1
+#define DEV_NAME "gamepad"
 
 // Prototypes
 static int __init gamepad_init(void);
 static void __exit gamepad_exit(void);
+static void __exit gamepad_cleanup(void);
 static int gamepad_open(struct inode *, struct file *);
 static int gamepad_release(struct inode *, struct file *);
 static ssize_t gamepad_read(struct file *, char *__user, size_t, loff_t *);
@@ -45,6 +50,11 @@ struct cdev gamepad_cdev;
 struct fasync_struct *async_queue;
 struct class *cl;
 static void __iomem *mem_gpio_port_c, *mem_gpio_int;
+/*
+static dev_t first; // Global variable for the first device number 
+static struct cdev c_dev; // Global variable for the character device structure
+static struct class *cl; // Global variable for the device class
+*/
 
 // Module configuration
 
@@ -64,7 +74,8 @@ static struct file_operations gamepad_fops = {
 
 irqreturn_t gpio_interrupt_handler(int irq, void* dev_id, struct pt_regs* regs)
 {
-    printk(KERN_ALERT "Handling GPIO interrupt\n");
+    //printk(KERN_ALERT "Handling GPIO interrupt\n");
+    printk(KERN_ALERT "Handling GPIO interrupt: Got %d\n", ioread32(GPIO_IF));
     iowrite32(ioread32(GPIO_IF), GPIO_IFC);
     if (async_queue) {
         kill_fasync(&async_queue, SIGIO, POLL_IN);
@@ -110,6 +121,32 @@ static int __init gamepad_init(void)
 	// Bind our IRQs in the kernel:
 	request_irq(GPIO_EVEN_IRQ_LINE, (irq_handler_t)gpio_interrupt_handler, 0, DRIVER_NAME, &gamepad_cdev);
     request_irq(GPIO_ODD_IRQ_LINE, (irq_handler_t)gpio_interrupt_handler, 0, DRIVER_NAME, &gamepad_cdev);
+	
+	/* add device */
+    cdev_init(&gamepad_cdev, &gamepad_fops);
+    gamepad_cdev.owner = THIS_MODULE;
+    cdev_add(&gamepad_cdev, device_nr, DEV_NR_COUNT);
+    cl = class_create(THIS_MODULE, DRIVER_NAME);
+    device_create(cl, NULL, device_nr, NULL, DRIVER_NAME);
+	/*
+	cl = class_create(THIS_MODULE ,"x"); 
+	device_create(cl, NULL, dev, NULL, "gamepad");
+	
+
+	
+	int err, devno = MKDEV(0, 0 + index);    
+	cdev_init(&dev->cdev, &scull_fops);
+    dev->cdev.owner = THIS_MODULE;
+    dev->cdev.ops = &scull_fops;
+    err = cdev_add (&dev->cdev, devno, 1);
+    /* Fail gracefully if need be. */
+    /*
+	if (err)
+        printk(KERN_NOTICE "Error %d adding scull%d", err, index);
+    else
+        printk(KERN_INFO "scull: %d add success\n", index);
+
+	*/
 
 	return 0;
 }
@@ -137,20 +174,20 @@ static void __exit gamepad_cleanup(void)
 	release_mem_region(GPIO_INT_BASE, 0x020);
 
 	class_destroy(cl);
-	cdev_del(&my_cdev);
+	cdev_del(&gamepad_cdev);
 
-	unregister_chrdev_region(DEV_ID, 1);
+	unregister_chrdev_region(device_nr, DEV_NR_COUNT);
 }
 
 
-static int gamepad_open(struct inode *, struct file *)
+static int gamepad_open(struct inode* inode, struct file* filp)
 {
 	printk(KERN_INFO "Gamepad driver has started\n");
 	return 0;
 }
 
 
-static int gamepad_release(struct inode *, struct file *)
+static int gamepad_release(struct inode* inode, struct file* filp)
 {
 	printk(KERN_INFO "Gamepad driver has been closed\n");
 	return 0;

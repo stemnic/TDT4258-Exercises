@@ -10,3 +10,5 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+
+void sigio_handler(int signo);

@@ -1,4 +1,4 @@
-#include <stdint.h>
+//#include <stdint.h>
 
 // GPIO
 
@@ -52,7 +52,15 @@
 #define GPIO_EXTIRISE ((volatile uint32_t *)(GPIO_PA_BASE + 0x108))
 #define GPIO_EXTIFALL ((volatile uint32_t *)(GPIO_PA_BASE + 0x10c))
 #define GPIO_IEN ((volatile uint32_t *)(GPIO_PA_BASE + 0x110))
+#define GPIO_IF ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))
 #define GPIO_IFC ((volatile uint32_t *)(GPIO_PA_BASE + 0x11c))
+
+#define EXTIPSELL_OFFSET 0x00
+#define EXTIPSELH_OFFSET 0x04
+#define EXTIRISE_OFFSET 0x08
+#define EXTIFALL_OFFSET 0x0c
+#define IEN_OFFSET 0x10
+#define IFC_OFFSET 0x1c
 
 // CMU
 
