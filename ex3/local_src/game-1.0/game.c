@@ -17,7 +17,12 @@ int main(int argc, char *argv[])
 	printf("Hello World, I'm game!\n");
     set_screen_black();
     draw_pixel(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 , color(30,30,30));
-    gamepad_init();
+
+    int status = gamepad_init();
+    if (status != EXIT_SUCCESS) {
+        exit(status);
+    }
+    
     while (true) {
         //main game loop
         set_screen_black();
